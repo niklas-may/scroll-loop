@@ -22,15 +22,16 @@ const ScrollLoop = () => {
         dispatch({type: 'translateY', payload: wheel})
     }
 
-    useEffect( ()=> {
-        document.addEventListener('mousewheel', function (event) {
-            handleWheelInput(event)
-        });
-    },[])
-
     const cssTranlsate = {
         transform: `translate3d(0px, ${state.offSetY}px, 0px)`,
     }
+    
+    useEffect( ()=> {
+        document.addEventListener('mousewheel', event => handleWheelInput(event));
+        return () => {
+            document.removeEventListener('mousewheel', event => handleWheelInput(event));
+        }
+    },[])
 
     return (
         <div className="scroll-container">
