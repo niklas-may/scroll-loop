@@ -16,6 +16,15 @@ function App() {
           <div className="row scroll-item">
             <p className="one-of-three title">Me</p>
           </div>
+          <div className="row scroll-item">
+            <p className="one-of-three title">You</p>
+          </div>
+          <div className="row scroll-item">
+            <p className="one-of-three title">Lazy</p>
+          </div>
+          <div className="row scroll-item">
+            <p className="one-of-three title">Scroller</p>
+          </div>
         </ScrollLoop>
       </div>
     </div>

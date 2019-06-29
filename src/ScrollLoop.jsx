@@ -14,6 +14,7 @@ const ScrollLoop = ( props ) => {
                     className={`loop-items items-copy-${copy}`}
                     ref={childrenCopyRef.current[copy]}
                     key={copy}
+                    style={{order: copy + 1}}
                 >
                 {
                     children.map( child => {
@@ -28,7 +29,8 @@ const ScrollLoop = ( props ) => {
 
     const initialState = {
         offSetY: 0,
-        childrenHeight: 0
+        childrenHeight: 0,
+        order: []
     };
     const reducer = (state, action) => {
         switch (action.type) {
@@ -44,6 +46,8 @@ const ScrollLoop = ( props ) => {
                 const pixelY = action.payload;
 
                 let newOffSetY = pixelY * -1;
+                let newOrder = state.order;
+
                 const wheelDirection = (() => {
                     if(pixelY < 0) {
                         return "DOWN"
@@ -58,18 +62,41 @@ const ScrollLoop = ( props ) => {
                 const totalHeight = state.childrenHeight * copys;
                 const relativeOffset = state.offSetY / totalHeight * 100 * -1;
 
+                const changeFlexOrder = () => {
+                    for(let copy = 0; copy < copys; copy++){
+                        childrenCopyRef.current[copy].current.style.order = newOrder[copy]
+                    }
+                }
+
                 if(wheelDirection === "UP" && relativeOffset > 49.99995) {
                     newOffSetY += state.childrenHeight
+
+                    const tempA = newOrder.slice(0, 2);
+                    const tempB = [newOrder[2], ...tempA];
+                    newOrder = tempB;
+
+                    changeFlexOrder()
+  
                 }
                 if(wheelDirection === "DOWN" && relativeOffset < 16.6666) {
                     newOffSetY -= state.childrenHeight
+
+                    const tempA = newOrder.slice(1, 3);
+                    const tempB = [...tempA, newOrder[0]];
+                    newOrder = tempB;
+                    changeFlexOrder()
                 }
 
-                return {...state, offSetY: state.offSetY + newOffSetY};
+                return {...state, offSetY: state.offSetY + newOffSetY, order: newOrder};
            
             case 'init':
                 const height = childrenCopyRef.current[0].current.clientHeight;
-                return {...state, offSetY: -height, childrenHeight: height}
+                const order = []
+                for(let i = 0; i < children.length; i++){
+                    order[i] = i + 1;
+                }
+
+                return {...state, offSetY: -height, childrenHeight: height, order: order}
             default:
                 throw new Error();
         } 
@@ -88,14 +115,17 @@ const ScrollLoop = ( props ) => {
     const handleTouchMove = (event) => {
         event.preventDefault();
         console.log(event)
+
     }
 
     const cssItemsWrapper = {
         transform: `translate3d(0px, ${state.offSetY}px, 0px)`,
+        display: "flex",
+        flexDirection: "column"
     }
     const cssScrollContainer = {
         height: `${state.childrenHeight}px`,
-        overflow: "hidden",
+        overflow: "hidden"
     }
     
     useEffect( () => {

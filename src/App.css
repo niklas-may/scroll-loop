@@ -31,7 +31,33 @@ html, body {
 .scroll-item {
   text-align: left;
   border-top: 1px solid black;
-  padding-bottom: 2em;
+  /* padding-bottom: 2em; */
+  height: 3em;
+  background-color: white;
+  transition: all 175ms ease-in-out;
+}
+
+.scroll-item:hover {
+  height: 5em;
+
+}
+.scroll-item:nth-child(1):hover{
+  background-color: #2ECC40;
+}
+.scroll-item:nth-child(2):hover{
+  background-color: #01FF70;
+}
+.scroll-item:nth-child(3):hover{
+  background-color: #FFDC00;
+}
+.scroll-item:nth-child(4):hover{
+  background-color: #FF851B;
+}
+.scroll-item:nth-child(5):hover{
+  background-color: #FF4136;
+}
+.scroll-item:nth-child(6):hover{
+  background-color: #85144b;
 }
 .row {
   display: flex;

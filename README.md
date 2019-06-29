@@ -14,6 +14,7 @@ http://d4nyll.github.io/lethargy/
 
 *ToDo*
 - Create touch interaction https://www.kirupa.com/html5/drag.htm
+- Move event listener from document level to element level to prevent default
 - Capture wheelevents only if mouse is over scroll container
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
