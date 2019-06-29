@@ -1,15 +1,13 @@
 #Scroll-Loop
 
-Conceptual approaches
+*Information on mousewheel normalization*
+https://github.com/basilfx/normalize-wheel
+https://gist.github.com/akella/11574989a9f3cc9e0ad47e401c12ccaf
+https://embed.plnkr.co/plunk/skVoXt
+https://github.com/goxjs/glfw/issues/10
 
-A) Bundle Scroll Items in div
-- Alle Items are positions in one wrapper div
-- Only the wrapper div receives a tranlsate3d
-- Copys
-    - A) Triple the wrapper
-        - Keep track of wrapper position
-        - Keep track of total hight of wrapper
-    - B) 
+detect inertial scrolling
+http://d4nyll.github.io/lethargy/ 
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

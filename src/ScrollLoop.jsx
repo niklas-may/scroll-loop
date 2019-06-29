@@ -1,8 +1,5 @@
 import React, {useEffect, useReducer, useRef, createRef} from 'react';
 import normalizeWheel from 'normalize-wheel'; 
-// More infos on wheel normalization: 
-// https://gist.github.com/akella/11574989a9f3cc9e0ad47e401c12ccaf
-// https://embed.plnkr.co/plunk/skVoXt
 import './ScrollLoop.css'
 
 const ScrollLoop = ( props ) => {
@@ -44,12 +41,12 @@ const ScrollLoop = ( props ) => {
                 
                 const { pixelY } = action.payload;
 
-                let newOffSetY = pixelY;
+                let newOffSetY = pixelY * -1;
                 const wheelDirection = (() => {
-                    if(pixelY > 0) {
+                    if(pixelY < 0) {
                         return "DOWN"
                     }
-                    if(pixelY < 0){
+                    if(pixelY > 0){
                         return "UP"
                     }
                     if(pixelY === 0){
