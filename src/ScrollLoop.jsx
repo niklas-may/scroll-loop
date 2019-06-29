@@ -1,5 +1,8 @@
 import React, {useEffect, useReducer, useRef, createRef} from 'react';
-import normalizeWheel from 'normalize-wheel';
+import normalizeWheel from 'normalize-wheel'; 
+// More infos on wheel normalization: 
+// https://gist.github.com/akella/11574989a9f3cc9e0ad47e401c12ccaf
+// https://embed.plnkr.co/plunk/skVoXt
 import './ScrollLoop.css'
 
 const ScrollLoop = ( props ) => {
@@ -38,8 +41,9 @@ const ScrollLoop = ( props ) => {
                 // Threshold to loop 1.5
                 // Offset upper limit = 49.99995%
                 // Offset lower limit = 16.6666%
-
+                
                 const { pixelY } = action.payload;
+
                 let newOffSetY = pixelY;
                 const wheelDirection = (() => {
                     if(pixelY > 0) {
@@ -74,6 +78,7 @@ const ScrollLoop = ( props ) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const handleWheelInput = (event) => {
+        event.preventDefault();
         const wheel = normalizeWheel(event); 
         dispatch({type: 'translateY', payload: wheel})
     }
@@ -88,9 +93,10 @@ const ScrollLoop = ( props ) => {
     
     useEffect( () => {
         dispatch({type: 'init'})
-        document.addEventListener('mousewheel', event => handleWheelInput(event));
+        
+        document.addEventListener('onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll', event => handleWheelInput(event), false);
         return () => {
-            document.removeEventListener('mousewheel', event => handleWheelInput(event));
+            document.removeEventListener('onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll', event => handleWheelInput(event), false);
         }
     },[])
 
