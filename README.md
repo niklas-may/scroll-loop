@@ -1,14 +1,20 @@
 #Scroll-Loop
 
-*Information on mousewheel normalization*
+React component to creates a scrollable container where it's content loops when reached the end or the start.
+It utalizes translate3d instead of overflow scroll, and the global `onwheel` event as an input
+
+*Information on `onwheel` normalization*
 https://github.com/basilfx/normalize-wheel
 https://gist.github.com/akella/11574989a9f3cc9e0ad47e401c12ccaf
 https://embed.plnkr.co/plunk/skVoXt
 https://github.com/goxjs/glfw/issues/10
 
-detect inertial scrolling
+Detect inertial scrolling
 http://d4nyll.github.io/lethargy/ 
 
+*ToDo*
+- Create touch interaction https://www.kirupa.com/html5/drag.htm
+- Capture wheelevents only if mouse is over scroll container
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

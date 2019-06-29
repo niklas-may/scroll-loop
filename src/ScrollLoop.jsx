@@ -1,6 +1,5 @@
 import React, {useEffect, useReducer, useRef, createRef} from 'react';
 import normalizeWheel from 'normalize-wheel'; 
-import './ScrollLoop.css'
 
 const ScrollLoop = ( props ) => {
     const { children } = props;
@@ -34,12 +33,15 @@ const ScrollLoop = ( props ) => {
     const reducer = (state, action) => {
         switch (action.type) {
             case 'translateY':
+                // When to change the translate, to create the looping effect:
+                // The original children are beeing duplicated two times
+                // This results in a total of 3 copys of children
                 // Relative share of one copy: 33.3333%
-                // Threshold to loop 1.5
+                // Threshold to loop below 0.5 and above 1.5
                 // Offset upper limit = 49.99995%
                 // Offset lower limit = 16.6666%
                 
-                const { pixelY } = action.payload;
+                const pixelY = action.payload;
 
                 let newOffSetY = pixelY * -1;
                 const wheelDirection = (() => {
@@ -76,8 +78,16 @@ const ScrollLoop = ( props ) => {
 
     const handleWheelInput = (event) => {
         event.preventDefault();
+
         const wheel = normalizeWheel(event); 
-        dispatch({type: 'translateY', payload: wheel})
+        const pixelY = wheel.pixelY;
+
+        dispatch({type: 'translateY', payload: pixelY})
+    }
+
+    const handleTouchMove = (event) => {
+        event.preventDefault();
+        console.log(event)
     }
 
     const cssItemsWrapper = {
@@ -89,7 +99,14 @@ const ScrollLoop = ( props ) => {
     }
     
     useEffect( () => {
+
         dispatch({type: 'init'})
+
+        if("ontouchstart" in document) {
+            console.log("touch")
+            document.addEventListener("touchmove", event => handleTouchMove(event))
+
+        }
         
         document.addEventListener('onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll', event => handleWheelInput(event), false);
         return () => {
