@@ -1,16 +1,72 @@
-import React, {useEffect, useReducer} from 'react';
+import React, {useEffect, useReducer, useRef, createRef} from 'react';
 import normalizeWheel from 'normalize-wheel';
 import './ScrollLoop.css'
 
-const ScrollLoop = () => {
+const ScrollLoop = ( props ) => {
+    const { children } = props;
 
-    const initialState = {offSetY: 0};
+    const copys = 3
+    const childrenCopyRef =  useRef([...Array(copys)].map(() => createRef()))
+    const childrenCopys = (() => {
+        const temp = [];
+        for(let copy = 0; copy < copys; copy++) {
+            temp.push(
+                <div 
+                    className={`loop-items items-copy-${copy}`}
+                    ref={childrenCopyRef.current[copy]}
+                    key={copy}
+                >
+                {
+                    children.map( child => {
+                        return child
+                    })
+                }
+            </div>
+            );
+        }
+        return temp
+    })()
+
+    const initialState = {
+        offSetY: 0,
+        childrenHeight: 0
+    };
     const reducer = (state, action) => {
         switch (action.type) {
             case 'translateY':
-                const { pixelY } = action.payload;
+                // Relative share of one copy: 33.3333%
+                // Threshold to loop 1.5
+                // Offset upper limit = 49.99995%
+                // Offset lower limit = 16.6666%
 
-                return {offSetY: state.offSetY + pixelY};
+                const { pixelY } = action.payload;
+                let newOffSetY = pixelY;
+                const wheelDirection = (() => {
+                    if(pixelY > 0) {
+                        return "DOWN"
+                    }
+                    if(pixelY < 0){
+                        return "UP"
+                    }
+                    if(pixelY === 0){
+                        return "UNCHANGED"
+                    }      
+                })()
+                const totalHeight = state.childrenHeight * copys;
+                const relativeOffset = state.offSetY / totalHeight * 100 * -1;
+
+                if(wheelDirection === "UP" && relativeOffset > 49.99995) {
+                    newOffSetY += state.childrenHeight
+                }
+                if(wheelDirection === "DOWN" && relativeOffset < 16.6666) {
+                    newOffSetY -= state.childrenHeight
+                }
+
+                return {...state, offSetY: state.offSetY + newOffSetY};
+           
+            case 'init':
+                const height = childrenCopyRef.current[0].current.clientHeight;
+                return {...state, offSetY: -height, childrenHeight: height}
             default:
                 throw new Error();
         } 
@@ -22,11 +78,16 @@ const ScrollLoop = () => {
         dispatch({type: 'translateY', payload: wheel})
     }
 
-    const cssTranlsate = {
+    const cssItemsWrapper = {
         transform: `translate3d(0px, ${state.offSetY}px, 0px)`,
     }
+    const cssScrollContainer = {
+        height: `${state.childrenHeight}px`,
+        overflow: "hidden",
+    }
     
-    useEffect( ()=> {
+    useEffect( () => {
+        dispatch({type: 'init'})
         document.addEventListener('mousewheel', event => handleWheelInput(event));
         return () => {
             document.removeEventListener('mousewheel', event => handleWheelInput(event));
@@ -34,13 +95,9 @@ const ScrollLoop = () => {
     },[])
 
     return (
-        <div className="scroll-container">
-            <div style={cssTranlsate} className="row scroll-item">
-                <p className="one-of-three title">Item 1</p>
-                <div className="one-of-three">
-                    <p>Tranlsate-Y:</p>
-                    <p>{state.offSetY}px</p>
-                </div>
+        <div className="scroll-loop-container" style={cssScrollContainer}>
+            <div className="items-wrapper" style={cssItemsWrapper}>
+                {childrenCopys}
             </div>
         </div>
     )

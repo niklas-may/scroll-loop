@@ -1,3 +1,17 @@
+#Scroll-Loop
+
+Conceptual approaches
+
+A) Bundle Scroll Items in div
+- Alle Items are positions in one wrapper div
+- Only the wrapper div receives a tranlsate3d
+- Copys
+    - A) Triple the wrapper
+        - Keep track of wrapper position
+        - Keep track of total hight of wrapper
+    - B) 
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -5,7 +5,19 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <ScrollLoop />
+      <div className="scroll-container">
+        <ScrollLoop>
+          <div className="row scroll-item">
+            <p className="one-of-three title">Don't</p>
+          </div>
+          <div className="row scroll-item">
+            <p className="one-of-three title">Copy</p>
+          </div>
+          <div className="row scroll-item">
+            <p className="one-of-three title">Me</p>
+          </div>
+        </ScrollLoop>
+      </div>
     </div>
   );
 }
