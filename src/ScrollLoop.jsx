@@ -47,7 +47,6 @@ const ScrollLoop = ( props ) => {
 
                 let newOffSetY = pixelY * -1;
                 let newOrder = state.order;
-
                 const wheelDirection = (() => {
                     if(pixelY < 0) {
                         return "DOWN"
@@ -74,7 +73,6 @@ const ScrollLoop = ( props ) => {
                     const tempA = newOrder.slice(0, 2);
                     const tempB = [newOrder[2], ...tempA];
                     newOrder = tempB;
-
                     changeFlexOrder()
   
                 }
@@ -129,13 +127,11 @@ const ScrollLoop = ( props ) => {
     }
     
     useEffect( () => {
-
         dispatch({type: 'init'})
 
         if("ontouchstart" in document) {
             console.log("touch")
             document.addEventListener("touchmove", event => handleTouchMove(event))
-
         }
         
         document.addEventListener('onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll', event => handleWheelInput(event), false);
